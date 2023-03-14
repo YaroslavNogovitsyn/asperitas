@@ -7,6 +7,7 @@ from posts.post import Post
 from posts.repo import InMemoryPostsRepo
 from tools.misc import make_resp, check_keys, create_jwt_generate_response
 from users.repo import InMemoryUserRepo
+from users.user import User
 
 app = Flask(__name__)
 app.user_repo = InMemoryUserRepo()
@@ -75,7 +76,7 @@ def add_post():
         return make_resp(jsonify({'message': 'Bad request'}), 400)
 
     post = Post(**in_json)
-    post.author = get_jwt_identity()
+    post.author = User(**get_jwt_identity())
     post = app.post_repo.request_create(post)
     return make_resp(jsonify(post), 200)
 
@@ -83,6 +84,15 @@ def add_post():
 @app.route('/api/post/<int:post_id>', methods=['GET'])
 def get_post_by_id(post_id):
     return make_resp(jsonify(app.post_repo.get_by_id(post_id)), 200)
+
+
+@app.route('/api/post/<int:post_id>', methods=['DELETE'])
+@jwt_required
+def delete_post_by_id(post_id):
+    result = app.post_repo.request_delete(post_id, User(**get_jwt_identity()))
+    if result is None:
+        return make_resp(jsonify({"message": "success"}), 200)
+    return make_resp(jsonify({"message": result}), 200)
 
 
 if __name__ == '__main__':
