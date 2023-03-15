@@ -24,6 +24,7 @@ app.user_repo.request_create('yaris', '12345678')
 
 @app.route('/', defaults={"path": ""})
 @app.route('/u/<path:path>')
+@app.route('/a/<path:path>')
 def index(path):
     return app.send_static_file('index.html')
 
@@ -101,6 +102,11 @@ def delete_post_by_id(post_id):
 @app.route('/api/user/<username>', methods=['GET'])
 def get_posts_by_username(username):
     return make_resp(jsonify(app.post_repo.get_by_username(username)), 200)
+
+
+@app.route('/api/posts/<category>', methods=['GET'])
+def get_posts_by_category(category):
+    return make_resp(jsonify(app.post_repo.get_by_category(category)), 200)
 
 
 if __name__ == '__main__':

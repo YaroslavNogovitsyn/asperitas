@@ -20,6 +20,13 @@ class InMemoryPostsRepo:
                 result.append(value)
         return result
 
+    def get_by_category(self, category):
+        result = []
+        for value in self.by_id.values():
+            if value.category == category:
+                result.append(value)
+        return result
+
     def request_create(self, post):
         post.id = self.next_id
         post.created = datetime.now()
