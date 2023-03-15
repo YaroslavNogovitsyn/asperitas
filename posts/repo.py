@@ -10,11 +10,19 @@ class InMemoryPostsRepo:
         return tuple(self.by_id.values())
 
     def get_by_id(self, id_):
+        print(self.by_id)
         return self.by_id.get(id_, None)
+
+    def get_by_username(self, username):
+        result = []
+        for value in self.by_id.values():
+            if value.author.username == username:
+                result.append(value)
+        return result
 
     def request_create(self, post):
         post.id = self.next_id
-        post.created = datetime.now().isoformat()
+        post.created = datetime.now()
         self.by_id[post.id] = post
         self.next_id += 1
         return post
