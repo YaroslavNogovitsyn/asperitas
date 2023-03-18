@@ -29,7 +29,7 @@ class PostRes(Resource):
 class PostListRes(Resource):
     def get(self, **kwargs):
         if "category" in kwargs:
-            return jsonify(main_app.post_repo.get_by_category(kwargs["category_name"]))
+            return jsonify(main_app.post_repo.get_by_category(kwargs["category"]))
         return jsonify(main_app.post_repo.get_all())
 
     @jwt_required
